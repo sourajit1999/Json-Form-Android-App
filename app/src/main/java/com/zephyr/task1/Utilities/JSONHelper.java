@@ -1,4 +1,4 @@
-package com.applex.zephyr_task_1.Utilities;
+package com.zephyr.task1.Utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

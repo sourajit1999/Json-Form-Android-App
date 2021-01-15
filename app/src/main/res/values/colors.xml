@@ -16,7 +16,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#0072B1</color>
     <color name="colorPrimaryLight">#D4F0FF</color>
-    <color name="colorPrimaryDark">#004D77</color>
+    <color name="colorPrimaryDark">#ffffff</color>
     <color name="colorAccent">#0072B1</color>
     <color name="Background">#171E30</color>
     <color name="colorTheme">#18357C</color>

@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Zephyr_Task_1"
+rootProject.name = "Zephyr Task 1"

@@ -1,4 +1,4 @@
-package com.applex.zephyr_task_1.Activities;
+package com.zephyr.task1.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -20,11 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.applex.zephyr_task_1.Adapters.RecyclerAdapter;
-import com.applex.zephyr_task_1.Models.FormModel;
-import com.applex.zephyr_task_1.R;
-import com.applex.zephyr_task_1.Utilities.JSONHelper;
-import com.facebook.shimmer.ShimmerFrameLayout;
+import com.zephyr.task1.Adapters.RecyclerAdapter;
+import com.zephyr.task1.Models.FormModel;
+import com.zephyr.task1.R;
+import com.zephyr.task1.Utilities.JSONHelper;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProgressBar progress_more;
     private CoordinatorLayout main_layout;
-    private ShimmerFrameLayout shimmerFrameLayout;
     private ArrayList<FormModel> formModelArrayList;
     private long mLastClickTime = 0;
     private int checkGetMore = -1;
     private File fileJson;
     private String strFileJson;
+
     private Dialog dialog;
     private int fetch_more = 0;
 
@@ -60,13 +59,10 @@ public class MainActivity extends AppCompatActivity {
         main_layout = findViewById(R.id.main_layout);
         recyclerView = findViewById(R.id.recycler_list);
         progress_more = findViewById(R.id.progress_more);
-        shimmerFrameLayout = findViewById(R.id.shimmerLayout);
 
         settingImage(R.drawable.no_data);
         settingImage(R.drawable.error);
 
-        shimmerFrameLayout.setVisibility(View.VISIBLE);
-        shimmerFrameLayout.startShimmer();
 
         fileJson = new File(Environment.getExternalStorageDirectory() + "/Zephyr","Forms.json");
         try {
@@ -80,20 +76,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(true);
 
-        new Handler().postDelayed(() -> {
-            shimmerFrameLayout.stopShimmer();
-            shimmerFrameLayout.setVisibility(View.GONE);
-            if(strFileJson == null) {
-                main_layout.setBackgroundColor(getResources().getColor(R.color.white));
-                recyclerView.setVisibility(View.GONE);
-                no_data.setVisibility(View.GONE);
-                error.setVisibility(View.VISIBLE);
-            }
-            else {
-                formModelArrayList.clear();
-                buildRecyclerView(fetch_more);
-            }
-        }, 1000);
+
+        if(strFileJson == null) {
+            main_layout.setBackgroundColor(getResources().getColor(R.color.white));
+            recyclerView.setVisibility(View.GONE);
+            no_data.setVisibility(View.GONE);
+            error.setVisibility(View.VISIBLE);
+        }
+        else {
+            formModelArrayList.clear();
+            buildRecyclerView(fetch_more);
+        }
+
 
         ExtendedFloatingActionButton create_form = findViewById(R.id.create_form);
         create_form.setOnClickListener(view -> {

@@ -1,4 +1,4 @@
-package com.applex.zephyr_task_1.Activities;
+package com.zephyr.task1.Activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,8 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.applex.zephyr_task_1.R;
-import com.applex.zephyr_task_1.Utilities.JSONHelper;
+import com.zephyr.task1.R;
+import com.zephyr.task1.Utilities.JSONHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;

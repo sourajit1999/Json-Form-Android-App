@@ -10,7 +10,8 @@
     <ImageView
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_baseline_format_list_numbered_24"/>
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -24,23 +25,12 @@
         android:id="@+id/from"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/from"
-        android:gravity="center|bottom"
-        android:textColor="@color/light_black"
+        android:text="Zephyr Task 1\nSourajit Basu"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
         android:textSize="15sp"
-        android:layout_above="@+id/preptotal"
-        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
         android:textAllCaps="false"/>
 
-    <TextView
-        android:id="@+id/preptotal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center|bottom"
-        android:text="@string/prajata_samanta"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/light_black"
-        android:textSize="15sp" />
 
 </RelativeLayout>

@@ -23,7 +23,7 @@
             android:textSize="25sp"
             android:gravity="center"
             android:paddingHorizontal="25dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/black"
             android:textAllCaps="true"
             android:textStyle="bold"/>
 
@@ -38,8 +38,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@drawable/ic_businessman"
-            app:tint="@color/colorPrimaryDark" />
+            android:src="@drawable/ic_baseline_perm_identity_24"
+            app:tint="@color/purple_700" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -70,8 +70,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@drawable/ic_age"
-            app:tint="@color/colorPrimaryDark"/>
+            android:src="@drawable/ic_baseline_today_24"
+            app:tint="@color/purple_700"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -103,8 +103,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@drawable/ic_home_address"
-            app:tint="@color/colorPrimaryDark"/>
+            android:src="@drawable/ic_outline_home_work_24"
+            app:tint="@color/purple_700"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

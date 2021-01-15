@@ -1,4 +1,4 @@
-package com.applex.zephyr_task_1.Models;
+package com.zephyr.task1.Models;
 
 public class FormModel {
 
