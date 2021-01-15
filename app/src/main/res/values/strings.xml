@@ -10,7 +10,7 @@
     <string name="pin_code">Pin Code</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="fill_in_the_details">FILL IN THE DETAILS</string>
+    <string name="fill_in_the_details">Add Details</string>
     <string name="name">Name:</string>
     <string name="age_text">Age:</string>
     <string name="address_text">Address:</string>
