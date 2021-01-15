@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         progress_more = findViewById(R.id.progress_more);
 
         settingImage(R.drawable.no_data);
-        settingImage(R.drawable.error);
+        settingImage(R.drawable.no_data);
 
 
         fileJson = new File(Environment.getExternalStorageDirectory() + "/Zephyr","Forms.json");
