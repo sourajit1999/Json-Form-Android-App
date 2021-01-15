@@ -44,22 +44,6 @@ public class SplashActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbar);
         storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        Display display = getWindowManager().getDefaultDisplay();
-        int displayWidth = display.getWidth();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeResource(getResources(), R.drawable.assignment, options);
-
-        int width = options.outWidth;
-        if (width > displayWidth) {
-            options.inSampleSize = Math.round((float) width / (float) displayWidth);
-        }
-        options.inJustDecodeBounds = false;
-
-        Bitmap scaledBitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.assignment, options);
-        splash_image.setImageBitmap(scaledBitmap);
-
         file1 = new File(Environment.getExternalStorageDirectory(), "Zephyr");
         file2 =  new File(Environment.getExternalStorageDirectory() + "/Zephyr","Forms.json");
 

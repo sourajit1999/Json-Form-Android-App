@@ -10,7 +10,7 @@
     <color name="transparent_light_black">#55212121</color>
     <color name="light_grey">#F2F2F2</color>
     <color name="very_light_grey">#88F9F9F9</color>
-    <color name="grey">#D4D4D4</color>
+    <color name="grey">#F8F8FF</color>
     <color name="dark_grey">#878787</color>
     <color name="grey_black">#454545</color>
     <color name="white">#FFFFFFFF</color>

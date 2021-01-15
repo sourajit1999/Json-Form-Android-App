@@ -216,6 +216,7 @@
             android:layout_gravity="end"
             android:background="@drawable/custom_ripple_white"
             android:gravity="end"
+            android:layout_marginEnd="10dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             android:text="@string/cancel"
@@ -231,7 +232,7 @@
             android:paddingVertical="8dp"
             android:paddingHorizontal="13dp"
             android:background="@drawable/custom_ripple_white"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/purple_700"
             android:text="@string/save"/>
 
     </LinearLayout>
