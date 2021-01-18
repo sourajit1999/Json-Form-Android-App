@@ -1,4 +1,4 @@
-package com.zephyr.task1.Adapters;
+package com.zyephr.task1.Adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zephyr.task1.Models.FormModel;
-import com.zephyr.task1.R;
+import com.zyephr.task1.Models.FormModel;
+import com.zyephr.task1.R;
 
 import java.util.ArrayList;
 

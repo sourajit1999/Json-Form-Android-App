@@ -1,30 +1,34 @@
-package com.zephyr.task1.Activities;
+package com.zyephr.task1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.zephyr.task1.Adapters.RecyclerAdapter;
-import com.zephyr.task1.Models.FormModel;
-import com.zephyr.task1.R;
-import com.zephyr.task1.Utilities.JSONHelper;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.zyephr.task1.Adapters.RecyclerAdapter;
+import com.zyephr.task1.Models.FormModel;
+import com.zyephr.task1.Utilities.JSONHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,38 +37,61 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String[] storagePermission;
+    private final int STORAGE_REQUEST_CODE = 200;
+    private File file1, file2;
+
     private RecyclerAdapter adapter;
-    private ImageView no_data, error;
+    private ImageView empty, error;
     private RecyclerView recyclerView;
+
+    NestedScrollView nestedScrollView;
     private ProgressBar progress_more;
-    private CoordinatorLayout main_layout;
-    private ArrayList<FormModel> formModelArrayList;
+
+    private ArrayList<FormModel> formModels;
     private long mLastClickTime = 0;
     private int checkGetMore = -1;
     private File fileJson;
     private String strFileJson;
 
-    private Dialog dialog;
+    private Dialog formDialog;
     private int fetch_more = 0;
+
+    FloatingActionButton newForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        formModelArrayList = new ArrayList<>();
+        storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        file1 = new File(Environment.getExternalStorageDirectory(), "Zyephr");
+        file2 =  new File(Environment.getExternalStorageDirectory() + "/Zyephr","Forms.json");
+
+        if(checkStoragePermission()) {
+            if(file1.exists() && file2.exists()) {
+
+            } else {
+                new Background_Task().execute();
+            }
+        } else {
+            requestStoragePermission();
+        }
+
+
+        formModels = new ArrayList<>();
 
         error = findViewById(R.id.error);
-        no_data = findViewById(R.id.no_data);
-        main_layout = findViewById(R.id.main_layout);
         recyclerView = findViewById(R.id.recycler_list);
         progress_more = findViewById(R.id.progress_more);
+        nestedScrollView = findViewById(R.id.nestedScrollView);
+        newForm = findViewById(R.id.create_form);
 
-        settingImage(R.drawable.no_data);
-        settingImage(R.drawable.no_data);
 
+        empty = findViewById(R.id.empty);
 
-        fileJson = new File(Environment.getExternalStorageDirectory() + "/Zephyr","Forms.json");
+        fileJson = new File(Environment.getExternalStorageDirectory() + "/Zyephr","Forms.json");
         try {
             strFileJson = JSONHelper.getStringFromFile(fileJson.toString());
         } catch (Exception e) {
@@ -78,45 +105,43 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(strFileJson == null) {
-            main_layout.setBackgroundColor(getResources().getColor(R.color.white));
             recyclerView.setVisibility(View.GONE);
-            no_data.setVisibility(View.GONE);
+            empty.setVisibility(View.GONE);
             error.setVisibility(View.VISIBLE);
         }
         else {
-            formModelArrayList.clear();
+            formModels.clear();
             buildRecyclerView(fetch_more);
         }
 
 
-        ExtendedFloatingActionButton create_form = findViewById(R.id.create_form);
-        create_form.setOnClickListener(view -> {
+        newForm.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
 
-            dialog = new Dialog(MainActivity.this);
-            dialog.setContentView(R.layout.dialog_create_form);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.show();
+            formDialog = new Dialog(MainActivity.this);
+            formDialog.setContentView(R.layout.dialog_create_form);
+            formDialog.setCanceledOnTouchOutside(true);
+            formDialog.show();
 
-            dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
+            formDialog.findViewById(R.id.cancel).setOnClickListener(v -> formDialog.dismiss());
 
-            dialog.findViewById(R.id.save).setOnClickListener(v -> {
-                EditText name_edit_text = dialog.findViewById(R.id.name);
-                EditText age_edit_text = dialog.findViewById(R.id.age);
-                EditText address_line_edit_text = dialog.findViewById(R.id.address);
-                EditText city_edit_text = dialog.findViewById(R.id.city);
-                EditText state_edit_text = dialog.findViewById(R.id.state);
-                EditText pin_code_edit_text = dialog.findViewById(R.id.pin_code);
+            formDialog.findViewById(R.id.save).setOnClickListener(v -> {
+                EditText name_edit_text = formDialog.findViewById(R.id.name);
+                EditText age_edit_text = formDialog.findViewById(R.id.age);
+                EditText address_line_edit_text = formDialog.findViewById(R.id.address);
+                EditText city_edit_text = formDialog.findViewById(R.id.city);
+                EditText state_edit_text = formDialog.findViewById(R.id.state);
+                EditText pin_code_edit_text = formDialog.findViewById(R.id.pin_code);
 
                 final String name = name_edit_text.getText().toString().trim();
                 final String age = age_edit_text.getText().toString().trim();
-                final String address_line = address_line_edit_text.getText().toString().trim();
+                final String address = address_line_edit_text.getText().toString().trim();
                 final String city = city_edit_text.getText().toString().trim();
                 final String state = state_edit_text.getText().toString().trim();
-                final String pin_code = pin_code_edit_text.getText().toString().trim();
+                final String pin = pin_code_edit_text.getText().toString().trim();
 
                 if (name.isEmpty()) {
                     name_edit_text.setError("Name missing");
@@ -131,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     age_edit_text.requestFocus();
                 }
-                else if (address_line.isEmpty()) {
+                else if (address.isEmpty()) {
                     address_line_edit_text.setError("Address line missing");
                     address_line_edit_text.requestFocus();
                 }
@@ -143,33 +168,23 @@ public class MainActivity extends AppCompatActivity {
                     state_edit_text.setError("State missing");
                     state_edit_text.requestFocus();
                 }
-                else if (pin_code.length() != 6) {
-                    if (pin_code.isEmpty()) {
-                        pin_code_edit_text.setError("Pin code missing");
-                    }
-                    else {
-                        pin_code_edit_text.setError("Please enter a valid pin_code");
-                    }
+                else if (pin.length() != 6) {
+
+                    pin_code_edit_text.setError("Invalid Pin");
+
                     pin_code_edit_text.requestFocus();
                 }
                 else {
                     FormModel formModel = new FormModel();
                     formModel.setName(name);
                     formModel.setAge(Integer.parseInt(age));
-                    formModel.setAddress(address_line + ", " + city + " - " + pin_code + ", " + state);
-                    new Background_Task(formModel).execute();
+                    formModel.setAddress(address + ", " + city + " - " + pin + ", " + state);
+                    new backgroundAsync(formModel).execute();
                 }
             });
         });
 
-        NestedScrollView nestedScrollView = findViewById(R.id.nestedScrollView);
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)(v, scrollX, scrollY, oldScrollX, oldScrollY) ->{
-            if(scrollY > oldScrollY) {
-                new Handler().postDelayed(create_form::shrink, 200);
-            }
-            else if(scrollY < oldScrollY) {
-                new Handler().postDelayed(create_form::extend, 200);
-            }
 
             if(v.getChildAt(v.getChildCount() - 1) != null) {
                 if((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
@@ -185,6 +200,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    //////////////////PERMISSION REQUESTS/////////////////
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, storagePermission, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean result= ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        boolean result1= ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE )== (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == STORAGE_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (storageAccepted) {
+                    if(file1.exists() && file2.exists()) {
+                        new Handler().postDelayed(() -> {
+                            startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            finish();
+                        }, 1000);
+                    }
+                    else {
+                        new Background_Task().execute();
+                    }
+                } else {
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    class Background_Task extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if(!file1.exists()) {
+                if(!file1.mkdirs()) {
+                    return false;
+                }
+            }
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("Forms", jsonArray);
+                JSONHelper.writeJsonFile(file2, jsonObject.toString());
+                return true;
+            } catch (JSONException e) {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if(aBoolean) {
+
+            }
+            else {
+                Toast.makeText(MainActivity.this, "Something went wrong...",  Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private void buildRecyclerView(int index) {
         try {
@@ -203,17 +293,16 @@ public class MainActivity extends AppCompatActivity {
                     arrayList.add(formModel);
                 }
 
-                main_layout.setBackgroundColor(getResources().getColor(R.color.grey));
                 error.setVisibility(View.GONE);
-                no_data.setVisibility(View.GONE);
+                empty.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 progress_more.setVisibility(View.GONE);
 
                 if(arrayList.size() > 0) {
-                    formModelArrayList.addAll(arrayList);
+                    formModels.addAll(arrayList);
 
                     if(index == 0) {
-                        adapter = new RecyclerAdapter(formModelArrayList);
+                        adapter = new RecyclerAdapter(formModels);
                         recyclerView.setAdapter(adapter);
                     }
                     else {
@@ -229,33 +318,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
-                main_layout.setBackgroundColor(getResources().getColor(R.color.white));
                 recyclerView.setVisibility(View.GONE);
                 error.setVisibility(View.GONE);
-                no_data.setVisibility(View.VISIBLE);
+                empty.setVisibility(View.VISIBLE);
             }
         }
         catch (JSONException e) {
-            main_layout.setBackgroundColor(getResources().getColor(R.color.white));
             recyclerView.setVisibility(View.GONE);
-            no_data.setVisibility(View.GONE);
+            empty.setVisibility(View.GONE);
             error.setVisibility(View.VISIBLE);
         }
     }
 
+
     @SuppressLint("StaticFieldLeak")
-    class Background_Task extends AsyncTask<Void, Void, Void> {
+    class backgroundAsync extends AsyncTask<Void, Void, Void> {
 
         private final FormModel formModel;
 
-        Background_Task(FormModel formModel) {
+        backgroundAsync(FormModel formModel) {
             this.formModel = formModel;
         }
 
         @Override
         protected void onPreExecute() {
-            if(dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
+            if(formDialog != null && formDialog.isShowing()) {
+                formDialog.dismiss();
             }
         }
 
@@ -290,32 +378,10 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            formModelArrayList.clear();
+            formModels.clear();
             buildRecyclerView(0);
         }
     }
 
-    private void settingImage(int id) {
-        Display display = getWindowManager().getDefaultDisplay();
-        int displayWidth = display.getWidth();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
 
-        BitmapFactory.decodeResource(getResources(), id, options);
-
-        int width = options.outWidth;
-        if (width > displayWidth) {
-            options.inSampleSize = Math.round((float) width / (float) displayWidth);
-        }
-        options.inJustDecodeBounds = false;
-
-        Bitmap scaledBitmap =  BitmapFactory.decodeResource(getResources(), id, options);
-
-        if(id == R.drawable.no_data) {
-            no_data.setImageBitmap(scaledBitmap);
-        }
-        else {
-            error.setImageBitmap(scaledBitmap);
-        }
-    }
 }

@@ -2,7 +2,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.zephyr.task1">
+    package="com.zyephr.task1">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -35,7 +35,7 @@
         tools:targetApi="q">
 
         <activity
-            android:name="com.zephyr.task1.Activities.MainActivity"
+            android:name="com.zyephr.task1.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -46,7 +46,7 @@
         </activity>
 
         <activity
-            android:name="com.zephyr.task1.Activities.SplashActivity"
+            android:name="com.zyephr.task1.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.zephyr.task1.Utilities;
+package com.zyephr.task1.Utilities;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
 public class JSONHelper {
 
     public static String getStringFromFile(String filePath) throws Exception {
-        File fl = new File(filePath);
-        FileInputStream fin = new FileInputStream(fl);
+        File file = new File(filePath);
+        FileInputStream fin = new FileInputStream(file);
         String ret = convertStreamToString(fin);
         fin.close();
         return ret;
